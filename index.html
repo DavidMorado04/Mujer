@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cupones para mi niña guapa</title>
+<style>
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+}
+@keyframes fadeOut {
+    to { opacity: 0; visibility: hidden; }
+}
+@keyframes stamp {
+    0% { transform: scale(3) rotate(-20deg); opacity: 0; }
+    50% { transform: scale(0.8) rotate(-20deg); opacity: 1; }
+    100% { transform: scale(1) rotate(-20deg); opacity: 1; }
+}
+body {
+    margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(-45deg, #ffc2d8, #e0aaff, #fefae0, #ff0a54, #7209b7, #ffb703);
+    background-size: 400% 400%;
+    animation: gradientBG 15s ease infinite;
+    color: #5a2e3d; min-height: 100vh;
+}
+.splash {
+    position: fixed; inset: 0; background: inherit; z-index: 100;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; padding: 24px;
+}
+.splash.hidden { animation: fadeOut 0.8s forwards; }
+.heart { font-size: 6rem; animation: heartbeat 1.5s infinite; margin-bottom: 20px; filter: drop-shadow(0 0 10px rgba(255,10,84,0.5)); }
+.splash h1 { font-size: 2.5rem; margin-bottom: 10px; color: #fff; text-shadow: 2px 2px 8px rgba(0,0,0,0.4); }
+.splash p { font-size: 1.2rem; max-width: 500px; color: #fff; text-shadow: 1px 1px 4px rgba(0,0,0,0.4); margin-bottom: 30px; font-weight: 500; }
+.btn-splash { background: #ff0a54; color: white; border: none; padding: 15px 30px; font-size: 1.2rem; border-radius: 99px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 15px rgba(255,10,84,0.4); transition: transform 0.2s; }
+.btn-splash:hover { transform: scale(1.05); }
+
+main { display: none; max-width: 1100px; margin: auto; padding: 24px; }
+.hero { text-align: center; padding: 20px 0 40px; }
+.hero h1 { font-size: 2.5rem; color: #fff; text-shadow: 2px 2px 8px rgba(0,0,0,0.4); margin: 0; user-select: none; cursor: default; }
+.hero p { color: #fff; font-size: 1.1rem; text-shadow: 1px 1px 4px rgba(0,0,0,0.4); }
+
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+.coupon { background: rgba(255, 255, 255, 0.95); border-radius: 20px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.1); position: relative; display: flex; flex-direction: column; transition: transform 0.3s; }
+.coupon:hover { transform: translateY(-5px); }
+.coupon.redeemed { filter: grayscale(40%) sepia(20%); }
+.card-image { height: 180px; background-size: cover; background-position: center; border-bottom: 3px solid #ff0a54; }
+.card-content { padding: 20px; flex-grow: 1; display: flex; flex-direction: column; }
+.card-content h3 { margin: 0 0 10px 0; color: #7209b7; font-size: 1.3rem; }
+.card-content p { margin: 0 0 20px 0; color: #555; flex-grow: 1; line-height: 1.5; }
+
+.btn { width: 100%; border: 0; border-radius: 12px; background: #ff0a54; color: white; padding: 14px; cursor: pointer; font-weight: bold; font-size: 1rem; transition: background 0.3s; }
+.btn:disabled { background: #ccc; cursor: not-allowed; color: #666; }
+.btn:not(:disabled):hover { background: #d90443; }
+
+.stamp { position: absolute; top: 30%; left: 50%; transform: translate(-50%, -50%) rotate(-20deg); border: 4px dashed #ff0a54; color: #ff0a54; font-size: 2rem; font-weight: 900; padding: 10px 20px; border-radius: 10px; z-index: 10; pointer-events: none; animation: stamp 0.5s ease-out forwards; background: rgba(255,255,255,0.8); text-transform: uppercase; }
+
+/* Estilos de la Ventana Emergente (Modal) */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; z-index: 1000; opacity: 0; transition: opacity 0.3s; }
+.modal-overlay.active { display: flex; opacity: 1; }
+.modal-content { background: white; padding: 30px; border-radius: 20px; max-width: 90%; width: 400px; text-align: center; box-shadow: 0 15px 30px rgba(0,0,0,0.2); transform: scale(0.8); transition: transform 0.3s; }
+.modal-overlay.active .modal-content { transform: scale(1); }
+.modal-title { color: #ff0a54; font-size: 1.5rem; margin-top: 0; margin-bottom: 10px; }
+.modal-text { color: #555; font-size: 1.1rem; margin-bottom: 25px; }
+.modal-coupon-name { font-weight: bold; color: #7209b7; display: block; margin-top: 10px; font-size: 1.3rem; }
+.modal-buttons { display: flex; flex-direction: column; gap: 10px; }
+.btn-yes { background: #ff0a54; color: white; border: none; padding: 14px; border-radius: 12px; font-size: 1.1rem; font-weight: bold; cursor: pointer; }
+.btn-no { background: #f0f0f0; color: #555; border: none; padding: 14px; border-radius: 12px; font-size: 1rem; cursor: pointer; font-weight: bold; }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+</head>
+<body>
+
+<div id="splash" class="splash">
+    <div class="heart">❤️</div>
+    <h1>Una colección de caprichos pensada solo para ti</h1>
+    <p>Estos son unos cupones que te hice para que puedas ocuparlos cuando quieras amor, tú escogerás cuando quieras chula.</p>
+    <button class="btn-splash" onclick="startApp()">Abrir Regalo 🎁</button>
+</div>
+
+<main id="mainApp">
+    <header class="hero">
+        <h1 id="secretTitle">Cupones para mi niña guapa 💕</h1>
+        <p>¡Elige el que más te guste y canjéalo sin pensar! Te amo.</p>
+    </header>
+    <section class="grid" id="cards"></section>
+</main>
+
+<div id="customModal" class="modal-overlay">
+    <div class="modal-content">
+        <h2 class="modal-title">¿Segura, chula? 💖</h2>
+        <p class="modal-text">Estás a punto de canjear:<br><span id="modalCouponName" class="modal-coupon-name"></span></p>
+        <div class="modal-buttons">
+            <button class="btn-yes" id="btnConfirmYes">Sí, ¡usarlo! ✨</button>
+            <button class="btn-no" onclick="closeModal()">No, me equivoqué</button>
+        </div>
+    </div>
+</div>
+
+<script>
+const KEY = 'cupones_nina_guapa_v5';
+const initial = [
+    {"id": 1, "title": "Día diseñado para ti", "description": "Tú eliges el plan y yo lo organizo.", "img": "https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&q=80", "redeemed": false},
+    {"id": 2, "title": "Mini viaje sorpresa", "description": "Una escapadita planeada con cariño.", "img": "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=500&q=80", "redeemed": false},
+    {"id": 3, "title": "Sorpresa de outfit", "description": "Una sorpresa bonita para una salida.", "img": "https://images.unsplash.com/photo-1483985988355-763728e1935b?w=500&q=80", "redeemed": false},
+    {"id": 4, "title": "Tour de postres", "description": "Probamos tus postres favoritos.", "img": "https://images.unsplash.com/photo-1551024601-bec78aea704b?w=500&q=80", "redeemed": false},
+    {"id": 5, "title": "Reto de pareja", "description": "Un reto divertido elegido entre los dos.", "img": "https://tse4.mm.bing.net/th/id/OIP.dL77NlMecV7CZwA2UCttRwHaFx?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", "redeemed": false},
+    {"id": 6, "title": "Carta hecha a mano", "description": "Una carta con mucho cariño.", "img": "https://tse2.mm.bing.net/th/id/OIP.Sgau6OXkEiEYfjfRrjcxngHaJD?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", "redeemed": false},
+    {"id": 7, "title": "Tú eliges el regalo", "description": "Un detallito que tú escojas.", "img": "https://images.unsplash.com/photo-1513201099705-a9746e1e201f?w=500&q=80", "redeemed": false},
+    {"id": 8, "title": "Torneo de juegos", "description": "Una tarde de juegos mesa o videojuegos (menos el UNOOOO)", "img": "https://tse4.mm.bing.net/th/id/OIP.Xv8KyxNlboWSrSfHRW52LAHaNK?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", "redeemed": false},
+    {"id": 9, "title": "Álbum de recuerdos", "description": "Recordamos nuestros momentos favoritos.", "img": "https://i.pinimg.com/originals/51/90/99/519099140afd8a253970bf1681c164a7.jpg", "redeemed": false},
+    {"id": 10, "title": "Picnic juntos", "description": "Un picnic con tus snacks favoritos.", "img": "https://www.thespruceeats.com/thmb/T9Pry9NKLkINHXyPSAhvLctsIPQ=/3975x2505/filters:fill(auto,1)/summer-picnic-spread-on-blanket-with-jam-sandwiches--fruit-and-tea-802444066-5af3792f6bf06900366ddb39.jpg", "redeemed": false},
+    {"id": 11, "title": "Recrear nuestra primera cita", "description": "Una cita inspirada en la primera.", "img": "https://images.unsplash.com/photo-1517867065801-e20f409696b0?w=500&q=80", "redeemed": false},
+    {"id": 12, "title": "Nuestro recuerdo favorito", "description": "Celebramos un recuerdo especial.", "img": "https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=500&q=80", "redeemed": false},
+    {"id": 13, "title": "Tarde de cine", "description": "Película y snacks elegidos por ti.", "img": "https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=500&q=80", "redeemed": false},
+    {"id": 14, "title": "Salida por postre", "description": "Vamos por ese postre que te gusta (Molino Ruso).", "img": "https://tse1.mm.bing.net/th/id/OIP.TKEvBM3Ykm-tWDm5mrPbZQHaNJ?r=0&rs=1&pid=ImgDetMain&o=7&rm=3", "redeemed": false},
+    {"id": 15, "title": "Sí a un plan", "description": "Tú propones un plan y lo organizamos.", "img": "https://images.unsplash.com/photo-1522673607200-164d1b6ce486?w=500&q=80", "redeemed": false},
+    {"id": 16, "title": "Tapioca juntos", "description": "Una salida por tapioca y plática.", "img": "https://images.rappi.com.mx/products/976647837-1623525025825.png", "redeemed": false},
+    {"id": 17, "title": "Buen Masaje", "description": "Un ratito para hacerte un masaje rico que te guste y estés tranquila", "img": "https://images.unsplash.com/photo-1544161515-4ab6ce6db874?w=500&q=80", "redeemed": false}
+];
+
+const EMAILJS_PUBLIC_KEY = 'Or0t4RtX67Obwygt3';
+const EMAILJS_SERVICE_ID = 'service_0a5y3b8';
+const EMAILJS_TEMPLATE_ID = 'template_pyrgtao';
+const ADMIN_EMAIL = 'camposmoradodavid@icloud.com';
+
+try {
+    emailjs.init({publicKey: EMAILJS_PUBLIC_KEY});
+} catch(e) { console.error("Error inicializando EmailJS", e); }
+
+function startApp() {
+    document.getElementById('splash').classList.add('hidden');
+    setTimeout(() => {
+        document.getElementById('splash').style.display = 'none';
+        document.getElementById('mainApp').style.display = 'block';
+        render();
+    }, 800);
+}
+
+function loadCoupons(){
+    try{
+        const x = JSON.parse(localStorage.getItem(KEY));
+        if(Array.isArray(x)) {
+            return x.map(c => {
+                let orig = initial.find(i => i.id === c.id);
+                return {...c, img: orig ? orig.img : 'https://images.unsplash.com/photo-1518199266791-5375a83190b7?w=500&q=80'};
+            });
+        }
+        return initial.map(c=>({...c}));
+    }catch(e){return initial.map(c=>({...c}))}
+}
+
+function saveCoupons(d){localStorage.setItem(KEY,JSON.stringify(d))}
+
+function render(){
+    let cards = document.getElementById('cards');
+    cards.innerHTML = '';
+    loadCoupons().forEach(c => {
+        let e = document.createElement('article');
+        e.className = c.redeemed ? 'coupon redeemed' : 'coupon';
+        
+        e.innerHTML = `
+            <div class="card-image" style="background-image: url('${c.img}')"></div>
+            <div class="card-content">
+                <h3>${c.title}</h3>
+                <p>${c.description}</p>
+                <button class="btn">${c.redeemed ? 'Canjeado ✓' : 'Canjear cupón 🎁'}</button>
+            </div>
+            ${c.redeemed ? '<div class="stamp">Canjeado</div>' : ''}
+        `;
+        
+        let b = e.querySelector('button');
+        b.disabled = !!c.redeemed;
+        b.onclick = () => openModal(c);
+        cards.append(e);
+    });
+}
+
+let currentCouponToRedeem = null;
+
+function openModal(coupon) {
+    currentCouponToRedeem = coupon;
+    document.getElementById('modalCouponName').textContent = coupon.title;
+    document.getElementById('customModal').classList.add('active');
+    
+    document.getElementById('btnConfirmYes').onclick = () => {
+        confirmRedeem();
+    };
+}
+
+function closeModal() {
+    document.getElementById('customModal').classList.remove('active');
+    currentCouponToRedeem = null;
+}
+
+async function confirmRedeem() {
+    if(!currentCouponToRedeem) return;
+    
+    let c = currentCouponToRedeem;
+    let d = loadCoupons();
+    let couponInDb = d.find(x => x.id === c.id);
+    
+    if(couponInDb) {
+        couponInDb.redeemed = true;
+        saveCoupons(d);
+        render();
+    }
+    
+    closeModal();
+    
+    try{
+        await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, {
+            to_email: ADMIN_EMAIL, 
+            coupon_title: c.title, 
+            coupon_description: c.description, 
+            redeemed_at: new Date().toLocaleString('es-MX')
+        });
+    }catch(e){
+        console.error('Error enviando correo:', e);
+    }
+}
+
+let tapCount = 0;
+let tapTimeout;
+document.getElementById('secretTitle').addEventListener('click', () => {
+    tapCount++;
+    clearTimeout(tapTimeout);
+    
+    if (tapCount >= 5) {
+        tapCount = 0;
+        let psw = prompt("🔒 Acceso Admin: Ingresa la contraseña para reiniciar los cupones:");
+        if (psw === "teamo") {
+            saveCoupons(initial.map(c=>({...c}))); 
+            render();
+            alert("¡Todos los cupones han sido reiniciados exitosamente!");
+        } else if (psw !== null) {
+            alert("Contraseña incorrecta.");
+        }
+    }
+    
+    tapTimeout = setTimeout(() => {
+        tapCount = 0;
+    }, 1500); 
+});
+</script>
+</body>
+</html>
